@@ -18,9 +18,9 @@ public class HorseEggs extends JavaPlugin{
 
 	@Override
 	public void onEnable() {
-		VersionChecker vc = new VersionChecker("v1_8_R3");
+		VersionChecker vc = new VersionChecker("v1_9_R1");
 		if(!vc.check()){
-			this.getLogger().warning("Version mismatched. This plugin works only v1_8_R3 server.");
+			this.getLogger().warning("Version mismatched. This plugin works only v1_9_R1 server.");
 			this.setEnabled(false);
 			return;
 		}
