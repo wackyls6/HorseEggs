@@ -71,7 +71,7 @@ public class HorseEggs extends JavaPlugin{
 	public void onBlockDispense(BlockDispenseEvent event){
 		if(event.isCancelled() || event.getBlock().getType() == Material.DROPPER) return;
 		if(isHorseEgg(event.getItem()) || isEmptyHorseEgg(event.getItem())){
-			event.setCancelled(true);//仕様変更用にキャンセルから、
+			event.setCancelled(true);//仕様変更用にキャンセルから.
 			/*
 			Dispenser dispenserM = (Dispenser) event.getBlock().getState().getData();
 			Location loc = event.getBlock().getRelative(dispenserM.getFacing()).getLocation();
