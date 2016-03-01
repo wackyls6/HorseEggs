@@ -38,6 +38,7 @@ public class HorseEggs extends JavaPlugin{
 
 		//getServer().getPluginManager().registerEvents(this, this);
 		new PlayerInteractListener(this);
+		new ItemDespawnListener(this);
 	}
 
 	@Override
@@ -92,12 +93,12 @@ public class HorseEggs extends JavaPlugin{
 		return egg;
 	}
 
-	public boolean isEmptyHorseEgg(ItemStack item){
+	public boolean isEmptyHorseEgg(ItemStack item){//1.9では全てダメージ値0なので変更が必要かも
 		if(item.getType() == Material.MONSTER_EGG && item.getDurability() == 0 && item.getItemMeta().hasLore()) return true;
 		return false;
 	}
 
-	public boolean isHorseEgg(ItemStack item){
+	public boolean isHorseEgg(ItemStack item){//1.8まではダメージ値100、1.9ではメタ内にエンティティ記載あり
 		if(item.getType() == Material.MONSTER_EGG && item.getDurability() == 100 && item.getItemMeta().hasLore()) return true;
 		return false;
 	}
