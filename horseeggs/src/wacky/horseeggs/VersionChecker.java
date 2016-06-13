@@ -6,7 +6,7 @@ public class VersionChecker {
 	VersionChecker(String version) {
 		this.version = version;
 	}
-
+//てすと
 	public boolean check(){
 		try{
 			Class<?> c;
