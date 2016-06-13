@@ -6,21 +6,24 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class HorseEggs extends JavaPlugin{
+public class HorseEggs extends JavaPlugin implements Listener{
 
 	FileConfiguration config;
 
 	@Override
 	public void onEnable() {
-		VersionChecker vc = new VersionChecker("v1_9_R1");
+		VersionChecker vc = new VersionChecker("v1_9_R2");
 		if(!vc.check()){
-			this.getLogger().warning("Version mismatched. This plugin works only v1_9_R1 server.");
+			this.getLogger().warning("Version mismatched. This plugin works only v1_9_R2 server.");
 			this.setEnabled(false);
 			return;
 		}
@@ -36,9 +39,9 @@ public class HorseEggs extends JavaPlugin{
 		storageSignRecipe.setIngredient('E', Material.EGG);
 		getServer().addRecipe(storageSignRecipe);
 
-		//getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(this, this);
 		new PlayerInteractListener(this);
-		new ItemDespawnListener(this);
+		//new ItemDespawnListener(this);
 	}
 
 	@Override
@@ -66,12 +69,12 @@ public class HorseEggs extends JavaPlugin{
 		}
 		return false;
 	}*
-
+*/
 	@EventHandler
 	public void onBlockDispense(BlockDispenseEvent event){
 		if(event.isCancelled() || event.getBlock().getType() == Material.DROPPER) return;
 		if(isHorseEgg(event.getItem()) || isEmptyHorseEgg(event.getItem())){
-			event.setCancelled(true);//仕様変更用にキャンセルから.
+			event.setCancelled(true);//仕様変更用にキャンセルだけ.
 			/*
 			Dispenser dispenserM = (Dispenser) event.getBlock().getState().getData();
 			Location loc = event.getBlock().getRelative(dispenserM.getFacing()).getLocation();
@@ -80,6 +83,8 @@ public class HorseEggs extends JavaPlugin{
 			org.bukkit.block.Dispenser dispenserS = (org.bukkit.block.Dispenser)event.getBlock().getState();
 			dispenserS.getInventory().remove(event.getItem());
 			*/
+		}
+	}
 
 	//定義があるのは空だけ
 	public ItemStack emptyHorseEgg(int i){
@@ -94,12 +99,16 @@ public class HorseEggs extends JavaPlugin{
 	}
 
 	public boolean isEmptyHorseEgg(ItemStack item){//1.9では全てダメージ値0なので変更が必要かも
-		if(item.getType() == Material.MONSTER_EGG && item.getDurability() == 0 && item.getItemMeta().hasLore()) return true;
+		if(item.getType() == Material.MONSTER_EGG && item.getItemMeta().hasLore()){
+			if(item.getItemMeta().getLore().get(0).equals("Empty")) return true;
+		}
 		return false;
 	}
 
 	public boolean isHorseEgg(ItemStack item){//1.8まではダメージ値100、1.9ではメタ内にエンティティ記載あり
-		if(item.getType() == Material.MONSTER_EGG && item.getDurability() == 100 && item.getItemMeta().hasLore()) return true;
+		if(item.getType() == Material.MONSTER_EGG && item.getItemMeta().hasLore()){
+			if(item.getItemMeta().getLore().size() >= 3) return true;
+		}
 		return false;
 	}
 
