@@ -21,9 +21,10 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 	@Override
 	public void onEnable() {
-		VersionChecker vc = new VersionChecker("v1_9_R2");
+		String version = "v1_10_R1";
+		VersionChecker vc = new VersionChecker(version);
 		if(!vc.check()){
-			this.getLogger().warning("Version mismatched. This plugin works only v1_9_R2 server.");
+			this.getLogger().warning("Version mismatched. This plugin works only " + version + " server.");
 			this.setEnabled(false);
 			return;
 		}
@@ -47,29 +48,6 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	@Override
 	public void onDisable(){}
 
-/*	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)場所を拝借
-	{
-		if(cmd.getName().equalsIgnoreCase("forceenchant"))
-		{
-			Player player;
-			if(sender instanceof Player)
-			{
-				player = (Player)sender;
-				ItemStack item = player.getItemInHand();
-				ItemMeta meta = item.getItemMeta();
-				String id = args[0];
-				short level=Short.parseShort(args[1]);
-				meta.addEnchant(Enchantment.getByName(id), level,true);
-				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				item.setItemMeta(meta);
-				player.setItemInHand(item);
-				return true;
-			}
-
-		}
-		return false;
-	}*
-*/
 	@EventHandler
 	public void onBlockDispense(BlockDispenseEvent event){
 		if(event.isCancelled() || event.getBlock().getType() == Material.DROPPER) return;

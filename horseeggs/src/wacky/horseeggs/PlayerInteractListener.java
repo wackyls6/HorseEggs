@@ -1,15 +1,18 @@
 package wacky.horseeggs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_9_R2.NBTTagCompound;
-import net.minecraft.server.v1_9_R2.NBTTagList;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_10_R1.NBTTagList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -78,62 +81,93 @@ public class PlayerInteractListener implements Listener{
 
 			ItemStack horseegg = new ItemStack(Material.MONSTER_EGG, 1);
 			NBTTagCompound tag = new NBTTagCompound();//見た目を馬卵にする方法
-			net.minecraft.server.v1_9_R2.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
+			net.minecraft.server.v1_10_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 			NBTTagCompound id = new NBTTagCompound();
 			id.setString("id", "EntityHorse");
 			tag.set("EntityTag", id);
-			stack.setTag(tag);
-			horseegg = CraftItemStack.asBukkitCopy(stack);
-
-			ItemMeta meta = horseegg.getItemMeta();
-			meta.setDisplayName(horse.getCustomName());
+			NBTTagCompound horseData = new NBTTagCompound();
 			List<String> list = new ArrayList<String>();
+
+			//名前
+			if(horse.getCustomName() != null) horseData.setString("Name", horse.getCustomName());
+			//体力
+			horseData.setDouble("Health",horse.getHealth());
+			horseData.setDouble("MaxHealth", horse.getMaxHealth());
 			list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getMaxHealth());
 
-			//互換性に大問題
-			 tag = new NBTTagCompound();
-			((CraftHorse)horse).getHandle().b(tag);
-			NBTTagList attributes = tag.getList("Attributes", 10);
+			//速度、43倍すると実際の速度に
+			NBTTagCompound tag2 = new NBTTagCompound();
+			((CraftHorse)horse).getHandle().b(tag2);
+			NBTTagList attributes = tag2.getList("Attributes", 10);
 			for (int i=0; i<attributes.size(); i++) {
 				NBTTagCompound attr = attributes.get(i);
 				if (attr.getString("Name").equals("generic.movementSpeed")) {
-					list.add("Speed: " +  attr.getDouble("Base") *43);
+					Double speed = attr.getDouble("Base");
+					horseData.setDouble("Speed", speed);
+					if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
+					else list.add("Speed: " + Double.toString(speed*43));
 				}
 			}
-			Double jump = horse.getJumpStrength();
-			list.add("Jump: " + jump);
 
-			double jumpHeight = 0;//from Zyin's HUD
+			//跳躍力、NBTにのみ書かれるべき
+			Double jump = horse.getJumpStrength();
+			horseData.setDouble("Jump", jump);
+
+			double jumpHeight = 0;//from Zyin's HUD、ジャンプ高度
 			while (jump > 0)
 			{
 				jumpHeight += jump;
 				jump -= 0.08;
 				jump *= 0.98;
 			}
-			list.add("Height: " + jumpHeight);
+			if(Double.toString(jumpHeight).length() > 5) list.add("Height: " + Double.toString(jumpHeight).substring(0, 5));
+			else list.add("Height: " + Double.toString(jumpHeight));
 
-			if(horse.getVariant() != Variant.HORSE) list.add(horse.getVariant().toString());
+
+			horseData.setString("Variant", horse.getVariant().toString());
+			if(horse.getVariant() != Variant.HORSE){
+				list.add(horse.getVariant().toString());
+			}
 			else{
+				horseData.setString("Color", horse.getColor().toString());
+				horseData.setString("Style", horse.getStyle().toString());
 				list.add(horse.getColor().toString() + "/" + horse.getStyle().toString());
+
 			}
 
 			Location loc = horse.getLocation();
 			loc.add(0, 0.5, 0);
-			if(horse.getOwner() != null){
-				list.add("Owner: " + horse.getOwner().getName());
+			if(horse.getOwner() != null){//飼いならした人、UUIDを内部的には使用する。
+				AnimalTamer owner = horse.getOwner();
+				horseData.setLong("UUIDMost", owner.getUniqueId().getMostSignificantBits());
+				horseData.setLong("UUIDLeast", owner.getUniqueId().getLeastSignificantBits());
+				list.add("Owner: " + owner.getName());
 
 				HorseInventory hInv = horse.getInventory();
+				//サドル
+				horseData.setBoolean("Saddle",hInv.getSaddle() != null);
 				String str1 = hInv.getSaddle() == null ? "" : "[SADDLE]";
+
 				String str2 = "";
-				if(hInv.getArmor() != null) str2 = "[" + hInv.getArmor().getType().toString() + "]";
+				if(hInv.getArmor() != null){
+					horseData.setString("Armor", hInv.getArmor().getType().toString());
+					str2 = "[" + hInv.getArmor().getType().toString() + "]";
+				}
+				horseData.setBoolean("Chest", horse.isCarryingChest());
 				if(horse.isCarryingChest()) str2 = "[CHEST]";
 				if((str1 + str2).length() > 0) list.add(str1 + str2);
 
-				for(int i = 2; i <hInv.getSize();i++){
+				for(int i = 2; i <hInv.getSize();i++){//チェストと鎧?を除く
 					if(hInv.getItem(i) == null) continue;
 					horse.getWorld().dropItem(loc, hInv.getItem(i));
 				}
 			}
+
+			tag.set("HorseEgg",horseData);
+			stack.setTag(tag);
+			horseegg = CraftItemStack.asBukkitCopy(stack);
+			ItemMeta meta = horseegg.getItemMeta();
+			meta.setDisplayName(horse.getCustomName());
 			meta.setLore(list);
 			horseegg.setItemMeta(meta);
 
@@ -166,9 +200,39 @@ public class PlayerInteractListener implements Listener{
 				event.setCancelled(true);
 				return;
 			}
-			Location loc = event.getClickedBlock().getRelative(event.getBlockFace()).getLocation();
-			loc.add(0.5, 0, 0.5);
-			new ReleaseHorse(item, loc);
+
+			//馬がめり込まないようにしたい
+			Block centerBlock = event.getClickedBlock().getRelative(event.getBlockFace());
+			Location loc = centerBlock.getLocation();
+			Boolean[][] blocks = new Boolean[5][5];
+			Arrays.fill(blocks[0], false);
+			Arrays.fill(blocks[4], false);
+			boolean canSpawnCenter = true;
+			for(int i = 1; i <= 3; i++){
+				Arrays.fill(blocks[i], false);
+				for(int j = 1; j <= 3; j++){
+					blocks[i][j] = isSuffocating(centerBlock.getRelative(i-2, 1, j-2).getType());
+					if(blocks[i][j]) canSpawnCenter = false;
+				}
+			}
+			if(canSpawnCenter){
+				loc.add(0.5, 0, 0.5);
+				new ReleaseHorse(item, loc);
+			}
+			else search:{//どっかにブロック有り。
+				for(int i = 0; i < 3; i++){
+					for(int j = 0; j < 3; j++){//周囲9マス()にブロックが無いか
+						Boolean canSpawn = !blocks[i][j] && !blocks[i][j+1] && !blocks[i][j+2] && !blocks[i+1][j] && !blocks[i+1][j+1] && !blocks[i+1][j+2] && !blocks[i+2][j] && !blocks[i+2][j+1] && !blocks[i+2][j+2];
+						if(canSpawn){
+							loc.add(i*0.5, 0, j*0.5);
+							new ReleaseHorse(item, loc);
+							break search;
+						}
+					}
+				}//スポーン失敗。
+				event.setCancelled(true);
+				return;
+			}
 
 			//オフハンド対策
 			int amount = item.getAmount();
@@ -192,5 +256,13 @@ public class PlayerInteractListener implements Listener{
 				}
 			}
 		}
+	}
+
+	private boolean isSuffocating(Material mat){
+		if(mat.isOccluding()) return true;//窒息する透過ブロック
+		else if(mat == Material.TNT || mat == Material.ICE || mat == Material.GLOWSTONE || mat == Material.REDSTONE_BLOCK || mat == Material.SEA_LANTERN){
+			return true;
+		}
+		return false;
 	}
 }

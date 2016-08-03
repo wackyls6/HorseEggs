@@ -1,16 +1,18 @@
 package wacky.horseeggs;
 
 import java.util.List;
+import java.util.UUID;
 
-import net.minecraft.server.v1_9_R2.EntityHorse;
-import net.minecraft.server.v1_9_R2.NBTTagCompound;
-import net.minecraft.server.v1_9_R2.NBTTagList;
+import net.minecraft.server.v1_10_R1.EntityHorse;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_10_R1.NBTTagList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
@@ -22,6 +24,7 @@ import org.bukkit.util.NumberConversions;
 public class ReleaseHorse {
 
 	public ReleaseHorse(ItemStack item, Location loc) {
+		String name = null;
 		Double MaxHP = 0.0;
 		Double HP = 0.0;
 		Double speed = 0.0;
@@ -34,50 +37,78 @@ public class ReleaseHorse {
 		Color color = null;
 		Style style = null;
 
-		List<String> list = item.getItemMeta().getLore();
+		net.minecraft.server.v1_10_R1.ItemStack stack = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound horseData = stack.getTag().getCompound("HorseEgg");
+		if(!horseData.isEmpty()){//NBTから読むだけ簡単
+			name = horseData.getString("Name");
+			MaxHP = horseData.getDouble("MaxHealth");
+			HP = horseData.getDouble("Health");
+			speed = horseData.getDouble("Speed");
+			jump = horseData.getDouble("Jump");
 
-		for(int i=0; i < list.size(); i++){//順番とか気にしなくて良くなる
-			String str = list.get(i);
+			if(horseData.getLong("UUIDMost") != 0){
+				owner = Bukkit.getOfflinePlayer(new UUID(horseData.getLong("UUIDMost"), horseData.getLong("UUIDLeast")));
+			}
 
-			if(str.startsWith("HP")){
-				MaxHP = NumberConversions.toDouble(str.split(" ")[1].split("/")[1]);
-				HP = NumberConversions.toDouble(str.split(" ")[1].split("/")[0]);
+			if(horseData.getBoolean("Saddle")) saddle = new ItemStack(Material.SADDLE);
+			if(!horseData.getString("Armor").isEmpty()){
+				armor = new ItemStack(Material.getMaterial(horseData.getString("Armor")));
+			}
+			chest = horseData.getBoolean("Chest");
 
-			}else if(str.startsWith("Speed")){
-				speed = NumberConversions.toDouble(str.split(" ")[1]) /43;
+			variant = Variant.valueOf(horseData.getString("Variant"));
+			if(variant == Variant.HORSE){
+				color = Color.valueOf(horseData.getString("Color"));
+				style = Style.valueOf(horseData.getString("Style"));
+			}
 
-			}else if(str.startsWith("Jump")){
-				jump = NumberConversions.toDouble(str.split(" ")[1]);
+		}else{//Loreから読み取り
 
-			}else if(str.startsWith("Height")){//空白であってます
+			name = item.getItemMeta().getDisplayName();
+			List<String> list = item.getItemMeta().getLore();
+			for(int i=0; i < list.size(); i++){//順番とか気にしなくて良くなる
+				String str = list.get(i);
 
-			}else if(str.startsWith("Owner")){
-				owner = Bukkit.getOfflinePlayer(str.split(" ")[1]);
+				if(str.startsWith("HP")){
+					MaxHP = NumberConversions.toDouble(str.split(" ")[1].split("/")[1]);
+					HP = NumberConversions.toDouble(str.split(" ")[1].split("/")[0]);
 
-			}else if(str.startsWith("[")){//装備は必ず[]で囲む
-				if (str.contains("SADDLE")) saddle = new ItemStack(Material.SADDLE);
-				if (str.contains("IRON_BARDING")) armor = new ItemStack(Material.IRON_BARDING);
-				else if (str.contains("GOLD_BARDING")) armor = new ItemStack(Material.GOLD_BARDING);
-				else if (str.contains("DIAMOND_BARDING")) armor = new ItemStack(Material.DIAMOND_BARDING);
-				chest = str.contains("CHEST");
+				}else if(str.startsWith("Speed")){
+					speed = NumberConversions.toDouble(str.split(" ")[1]) /43;
 
-			}else{//消去法 残ったのは馬の種類、色、模様
-				if(str.contains("/")){
-					variant = Variant.HORSE;
-					color = Color.valueOf(str.split("/")[0]);
-					style = Style.valueOf(str.split("/")[1]);
-				}else{
-					variant = Variant.valueOf(str);
+				}else if(str.startsWith("Jump")){
+					jump = NumberConversions.toDouble(str.split(" ")[1]);
+
+				}else if(str.startsWith("Height")){//空白であってます
+
+				}else if(str.startsWith("Owner")){
+					owner = Bukkit.getOfflinePlayer(str.split(" ")[1]);
+
+				}else if(str.startsWith("[")){//装備は必ず[]で囲む
+					if (str.contains("SADDLE")) saddle = new ItemStack(Material.SADDLE);
+					if (str.contains("IRON_BARDING")) armor = new ItemStack(Material.IRON_BARDING);
+					else if (str.contains("GOLD_BARDING")) armor = new ItemStack(Material.GOLD_BARDING);
+					else if (str.contains("DIAMOND_BARDING")) armor = new ItemStack(Material.DIAMOND_BARDING);
+					chest = str.contains("CHEST");
+
+				}else{//消去法 残ったのは馬の種類、色、模様
+					if(str.contains("/")){
+						variant = Variant.HORSE;
+						color = Color.valueOf(str.split("/")[0]);
+						style = Style.valueOf(str.split("/")[1]);
+					}else{
+						variant = Variant.valueOf(str);
+					}
 				}
 			}
-		}
 
+		}
 
 
 		//馬生成をギリギリまで遅らせる
 		Horse horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);
 		horse.setAge(6000);//繁殖待ち6000tick
-		horse.setCustomName(item.getItemMeta().getDisplayName());
+		horse.setCustomName(name);
 		horse.setMaxHealth(MaxHP);
 		horse.setHealth(HP);
 
