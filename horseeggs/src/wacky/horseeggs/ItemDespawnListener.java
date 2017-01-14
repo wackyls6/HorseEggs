@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
+//うまく行ってないので凍結中
 public class ItemDespawnListener implements Listener{
 
 	private HorseEggs plugin;

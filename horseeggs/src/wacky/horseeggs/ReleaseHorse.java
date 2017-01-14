@@ -137,6 +137,8 @@ public class ReleaseHorse {
 		if(variant == Variant.HORSE){
 			horse.setColor(color);
 			horse.setStyle(style);
+		}else if(variant == Variant.SKELETON_HORSE){//骨馬は常時乗れるように
+			horse.setTamed(true);
 		}
 	}
 }

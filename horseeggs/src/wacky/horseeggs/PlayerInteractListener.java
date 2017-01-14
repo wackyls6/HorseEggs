@@ -74,7 +74,8 @@ public class PlayerInteractListener implements Listener{
 			}
 			return;
 
-		}else if(plugin.isEmptyHorseEgg(itemInHand) && horse.isAdult() && horse.getAge() < 5980){
+			//何かが乗ってる時は回収不能に
+		}else if(plugin.isEmptyHorseEgg(itemInHand) && horse.isAdult() && horse.getPassenger() == null && horse.getAge() < 5980){
 
 			event.setCancelled(true);//馬に卵を使ったことになるんだとか
 			if(!player.hasPermission("horseeggs.capture")) return;
@@ -137,11 +138,13 @@ public class PlayerInteractListener implements Listener{
 
 			Location loc = horse.getLocation();
 			loc.add(0, 0.5, 0);
-			if(horse.getOwner() != null){//飼いならした人、UUIDを内部的には使用する。
-				AnimalTamer owner = horse.getOwner();
-				horseData.setLong("UUIDMost", owner.getUniqueId().getMostSignificantBits());
-				horseData.setLong("UUIDLeast", owner.getUniqueId().getLeastSignificantBits());
-				list.add("Owner: " + owner.getName());
+			if(horse.isTamed()){//飼いならした人、UUIDを内部的には使用する。
+				if(horse.getOwner() != null){
+					AnimalTamer owner = horse.getOwner();
+					horseData.setLong("UUIDMost", owner.getUniqueId().getMostSignificantBits());
+					horseData.setLong("UUIDLeast", owner.getUniqueId().getLeastSignificantBits());
+					list.add("Owner: " + owner.getName());
+				}
 
 				HorseInventory hInv = horse.getInventory();
 				//サドル

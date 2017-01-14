@@ -52,7 +52,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	public void onBlockDispense(BlockDispenseEvent event){
 		if(event.isCancelled() || event.getBlock().getType() == Material.DROPPER) return;
 		if(isHorseEgg(event.getItem()) || isEmptyHorseEgg(event.getItem())){
-			event.setCancelled(true);//仕様変更用にキャンセルだけ.
+			event.setCancelled(true);//仕様変更用にキャンセルだけ.凍結中
 			/*
 			Dispenser dispenserM = (Dispenser) event.getBlock().getState().getData();
 			Location loc = event.getBlock().getRelative(dispenserM.getFacing()).getLocation();
