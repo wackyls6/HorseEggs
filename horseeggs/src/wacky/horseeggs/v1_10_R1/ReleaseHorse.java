@@ -1,4 +1,4 @@
-package wacky.horseeggs;
+package wacky.horseeggs.v1_10_R1;
 
 import java.util.List;
 import java.util.UUID;
@@ -130,9 +130,9 @@ public class ReleaseHorse {
 
 		horse.setJumpStrength(jump);
 		horse.setOwner(owner);
+		horse.setCarryingChest(chest);
 		horse.getInventory().setSaddle(saddle);
 		horse.getInventory().setArmor(armor);
-		horse.setCarryingChest(chest);
 		horse.setVariant(variant);
 		if(variant == Variant.HORSE){
 			horse.setColor(color);

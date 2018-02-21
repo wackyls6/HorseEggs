@@ -1,4 +1,4 @@
-package wacky.horseeggs;
+package wacky.horseeggs.v1_10_R1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +29,8 @@ import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import wacky.horseeggs.HorseEggs;
 
 public class PlayerInteractListener implements Listener{
 

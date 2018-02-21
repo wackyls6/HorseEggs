@@ -14,17 +14,20 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import wacky.horseeggs.v1_10_R1.PlayerInteractListener;
+
 
 public class HorseEggs extends JavaPlugin implements Listener{
 
-	FileConfiguration config;
+	public FileConfiguration config;
+	String version;
 
 	@Override
 	public void onEnable() {
-		String version = "v1_10_R1";
-		VersionChecker vc = new VersionChecker(version);
-		if(!vc.check()){
-			this.getLogger().warning("Version mismatched. This plugin works only " + version + " server.");
+		VersionChecker vc = new VersionChecker();
+		version = vc.check();
+		if(version.equals("other")){
+			this.getLogger().warning("Version error.");
 			this.setEnabled(false);
 			return;
 		}
@@ -138,5 +141,9 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		default:
 			return false;
 		}
+	}
+
+	public String getVersion(){
+		return this.version;
 	}
 }
