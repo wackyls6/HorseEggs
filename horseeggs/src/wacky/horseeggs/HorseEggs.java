@@ -14,17 +14,23 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import wacky.horseeggs.v1_10_R1.PlayerInteractListener10;
+import wacky.horseeggs.v1_11_R1.PlayerInteractListener11;
+import wacky.horseeggs.v1_12_R1.PlayerInteractListener12;
+import wacky.horseeggs.v1_9_R2.PlayerInteractListener9;
+
 
 public class HorseEggs extends JavaPlugin implements Listener{
 
-	FileConfiguration config;
+	public FileConfiguration config;
+	String version;
 
 	@Override
 	public void onEnable() {
-		String version = "v1_10_R1";
-		VersionChecker vc = new VersionChecker(version);
-		if(!vc.check()){
-			this.getLogger().warning("Version mismatched. This plugin works only " + version + " server.");
+		VersionChecker vc = new VersionChecker();
+		version = vc.check();
+		if(version.equals("other")){
+			this.getLogger().warning("Version error.");
 			this.setEnabled(false);
 			return;
 		}
@@ -41,7 +47,16 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		getServer().addRecipe(storageSignRecipe);
 
 		getServer().getPluginManager().registerEvents(this, this);
-		new PlayerInteractListener(this);
+
+		if(version.equals("v1_12_R1")){
+			new PlayerInteractListener12(this);
+		}else if(version.equals("v1_11_R1")){
+			new PlayerInteractListener11(this);
+		}else if(version.equals("v1_10_R1")){
+			new PlayerInteractListener10(this);
+		}else if(version.equals("v1_9_R2")){
+			new PlayerInteractListener9(this);
+		}
 		//new ItemDespawnListener(this);
 	}
 
@@ -138,5 +153,9 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		default:
 			return false;
 		}
+	}
+
+	public String getVersion(){
+		return this.version;
 	}
 }
