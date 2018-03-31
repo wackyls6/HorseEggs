@@ -58,7 +58,7 @@ public class PlayerInteractListener11 implements Listener{
 			return;
 		}
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
-		if(plugin.isHorseEgg(itemInHand)){//offhandの時は先に馬に乗る処理になるはず
+		if(plugin.isHorseEgg(itemInHand)){//offhandの時は先に馬に乗る処理になるはず.
 			event.setCancelled(true);//子馬が生まれないように
 			if(!player.hasPermission("horseeggs.release")) return;
 			Location loc = event.getRightClicked().getLocation();
