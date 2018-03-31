@@ -1,17 +1,17 @@
-package wacky.horseeggs.v1_10_R1;
+package wacky.horseeggs.v1_9_R2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_10_R1.NBTTagCompound;
-import net.minecraft.server.v1_10_R1.NBTTagList;
+import net.minecraft.server.v1_9_R2.NBTTagCompound;
+import net.minecraft.server.v1_9_R2.NBTTagList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -32,11 +32,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import wacky.horseeggs.HorseEggs;
 
-public class PlayerInteractListener implements Listener{
+public class PlayerInteractListener9 implements Listener{
 
 	private HorseEggs plugin;
 
-	public PlayerInteractListener(HorseEggs plugin){
+	public PlayerInteractListener9(HorseEggs plugin){
     	this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -84,7 +84,7 @@ public class PlayerInteractListener implements Listener{
 
 			ItemStack horseegg = new ItemStack(Material.MONSTER_EGG, 1);
 			NBTTagCompound tag = new NBTTagCompound();//見た目を馬卵にする方法
-			net.minecraft.server.v1_10_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
+			net.minecraft.server.v1_9_R2.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 			NBTTagCompound id = new NBTTagCompound();
 			id.setString("id", "EntityHorse");
 			tag.set("EntityTag", id);
