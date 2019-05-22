@@ -14,11 +14,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import wacky.horseeggs.v1_10_R1.PlayerInteractListener10;
-import wacky.horseeggs.v1_11_R1.PlayerInteractListener11;
-import wacky.horseeggs.v1_12_R1.PlayerInteractListener12;
-import wacky.horseeggs.v1_9_R2.PlayerInteractListener9;
-
 
 public class HorseEggs extends JavaPlugin implements Listener{
 
@@ -48,14 +43,8 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 		getServer().getPluginManager().registerEvents(this, this);
 
-		if(version.equals("v1_12_R1")){
-			new PlayerInteractListener12(this);
-		}else if(version.equals("v1_11_R1")){
-			new PlayerInteractListener11(this);
-		}else if(version.equals("v1_10_R1")){
-			new PlayerInteractListener10(this);
-		}else if(version.equals("v1_9_R2")){
-			new PlayerInteractListener9(this);
+		if(version.equals("v1_13_R1")){
+			new PlayerInteractListener13(this);
 		}
 		//new ItemDespawnListener(this);
 	}
