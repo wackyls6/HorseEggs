@@ -91,7 +91,7 @@ public class PlayerInteractListener12 implements Listener{
 			NBTTagCompound tag = new NBTTagCompound();//見た目を馬卵にする方法
 			net.minecraft.server.v1_12_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 			NBTTagCompound id = new NBTTagCompound();
-			id.setString("id", type.toString());//大文字だけ
+			id.setString("id", "minecraft:" + type.toString().toLowerCase());
 			tag.set("EntityTag", id);
 			NBTTagCompound horseData = new NBTTagCompound();
 			List<String> list = new ArrayList<String>();
@@ -134,11 +134,11 @@ public class PlayerInteractListener12 implements Listener{
 
 			horseData.setString("Type", horse.getType().toString());
 			horseData.setString("Variant", horse.getVariant().toString());
-			
+
 			if(horse.getType() == EntityType.LLAMA){
 				horseData.setInt("Strength", ((Llama) horse).getStrength());
 				list.add("Strength: " + ((Llama) horse).getStrength());
-				
+
 				horseData.setString("Color", ((Llama) horse).getColor().toString());
 				list.add(horse.getType().toString() + "/" + ((Llama) horse).getColor().toString());
 			}

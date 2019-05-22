@@ -26,9 +26,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.LlamaInventory;
 import org.bukkit.inventory.PlayerInventory;
@@ -81,7 +81,7 @@ public class PlayerInteractListener11 implements Listener{
 			return;
 
 			//何かが乗ってる時は回収不能、子馬・出した直後もNG
-		}else if(plugin.isEmptyHorseEgg(itemInHand) && horse.isAdult() && horse.getPassengers().isEmpty() && horse.getAge() < 5980){
+		}else if(plugin.isEmptyHorseEgg(itemInHand) && horse.isAdult() && horse.getPassenger() == null && horse.getAge() < 5980){
 
 			event.setCancelled(true);//馬に卵を使ったことになるんだとか
 			if(!player.hasPermission("horseeggs.capture")) return;
@@ -91,7 +91,7 @@ public class PlayerInteractListener11 implements Listener{
 			NBTTagCompound tag = new NBTTagCompound();//見た目を馬卵にする方法
 			net.minecraft.server.v1_11_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 			NBTTagCompound id = new NBTTagCompound();
-			id.setString("id", type.toString());//大文字だけ
+			id.setString("id", "minecraft:" + type.toString().toLowerCase());
 			tag.set("EntityTag", id);
 			NBTTagCompound horseData = new NBTTagCompound();
 			List<String> list = new ArrayList<String>();
@@ -162,10 +162,15 @@ public class PlayerInteractListener11 implements Listener{
 					list.add("Owner: " + owner.getName());
 				}
 
-				AbstractHorseInventory hInv = horse.getInventory();
+				Inventory hInv = horse.getInventory();
+				String str1 = "";
+				if(type == EntityType.LLAMA){//馬でしかサドル指定がない、ロバラバも無い
+					horseData.setBoolean("Saddle",false);
+				}else{
 				//サドル
-				horseData.setBoolean("Saddle",hInv.getSaddle() != null);
-				String str1 = hInv.getSaddle() == null ? "" : "[SADDLE]";
+				horseData.setBoolean("Saddle", hInv.getItem(0) != null);
+				str1 = hInv.getItem(0) == null ? "" : "[SADDLE]";
+				}
 
 				String str2 = "";
 				if(type == EntityType.HORSE && ((HorseInventory) hInv).getArmor() != null){

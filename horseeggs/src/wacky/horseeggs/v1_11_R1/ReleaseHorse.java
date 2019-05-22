@@ -169,7 +169,7 @@ public class ReleaseHorse {
 
 		horse.setJumpStrength(jump);
 		horse.setOwner(owner);
-		horse.getInventory().setSaddle(saddle);
+		horse.getInventory().setItem(0, saddle);//0番で直接指定する必要が
 		if(horse.getType() == EntityType.HORSE){
 			((Horse) horse).setColor(color);
 			((Horse) horse).setStyle(style);
