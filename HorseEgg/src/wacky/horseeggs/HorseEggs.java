@@ -44,7 +44,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		getServer().getPluginManager().registerEvents(this, this);
 
 		if(version.equals("v1_13_R1")){
-			new PlayerInteractListener13(this);
+			new PlayerInteractListener113(this);
 		}
 		//new ItemDespawnListener(this);
 	}
