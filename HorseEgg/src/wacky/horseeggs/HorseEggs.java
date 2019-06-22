@@ -14,6 +14,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import wacky.horseeggs.v1_13_R2.PlayerInteractListener13;
+
 
 public class HorseEggs extends JavaPlugin implements Listener{
 
@@ -43,8 +45,8 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 		getServer().getPluginManager().registerEvents(this, this);
 
-		if(version.equals("v1_13_R1")){
-			new PlayerInteractListener113(this);
+		if(version.equals("v1_13_R2")){
+			new PlayerInteractListener13(this);
 		}
 		//new ItemDespawnListener(this);
 	}
@@ -70,7 +72,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 	//定義があるのは空だけ
 	public ItemStack emptyHorseEgg(int i){
-		ItemStack egg = new ItemStack(Material.MONSTER_EGG, i);
+		ItemStack egg = new ItemStack(Material.PIG_SPAWN_EGG, i);
 		ItemMeta meta = egg.getItemMeta();
 		meta.setDisplayName("HorseEgg");
 		List<String> lore = new ArrayList<String>();
@@ -80,64 +82,76 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		return egg;
 	}
 
-	public boolean isEmptyHorseEgg(ItemStack item){//1.9では全てダメージ値0なので変更が必要かも
-		if(item.getType() == Material.MONSTER_EGG && item.getItemMeta().hasLore()){
+	public boolean isEmptyHorseEgg(ItemStack item){//1.13では白い馬卵が無い
+		if(item.getType() == Material.PIG_SPAWN_EGG && item.getItemMeta().hasLore()){
 			if(item.getItemMeta().getLore().get(0).equals("Empty")) return true;
 		}
 		return false;
 	}
 
 	public boolean isHorseEgg(ItemStack item){//1.8まではダメージ値100、1.9ではメタ内にエンティティ記載あり
-		if(item.getType() == Material.MONSTER_EGG && item.getItemMeta().hasLore()){
-			if(item.getItemMeta().getLore().size() >= 3) return true;
+		if(item.getType() == Material.HORSE_SPAWN_EGG || item.getType() == Material.ZOMBIE_HORSE_SPAWN_EGG || item.getType() == Material.SKELETON_HORSE_SPAWN_EGG || item.getType() == Material.DONKEY_SPAWN_EGG ||item.getType() == Material.MULE_SPAWN_EGG || item.getType() == Material.LLAMA_SPAWN_EGG){
+			if(item.getItemMeta().hasLore() && item.getItemMeta().getLore().size() >= 3) return true;
 		}
 		return false;
 	}
 
-	public boolean isClickable(Block block) {//わざわざ作らないかんのか(困惑)
+	public boolean isClickable(Block block) {//名前変わりすぎ
 		switch(block.getType()){
 		case ANVIL:
 		case BEACON:
-		case BED_BLOCK:
 		case BIRCH_DOOR:
+		case BIRCH_TRAPDOOR:
 		case BIRCH_FENCE_GATE:
 		case BREWING_STAND:
-		case BURNING_FURNACE:
-		case CAKE_BLOCK:
+		case FURNACE:
+		case CAKE:
 		case CHEST:
-		case COMMAND:
+		case COMMAND_BLOCK:
+		case DARK_OAK_BUTTON:
 		case DARK_OAK_DOOR:
+		case DARK_OAK_TRAPDOOR:
 		case DARK_OAK_FENCE_GATE:
 		case DAYLIGHT_DETECTOR:
-		case DAYLIGHT_DETECTOR_INVERTED:
-		case DIODE_BLOCK_OFF:
-		case DIODE_BLOCK_ON:
+		case REPEATER:
 		case DISPENSER:
 		case DROPPER:
-		case ENCHANTMENT_TABLE:
+		case ENCHANTING_TABLE:
 		case ENDER_CHEST:
-		case FENCE_GATE:
-		case FURNACE:
 		case HOPPER:
-		case IRON_DOOR_BLOCK:
+		case IRON_DOOR:
 		case IRON_TRAPDOOR:
 		case JUNGLE_DOOR:
 		case JUNGLE_FENCE_GATE:
 		case LEVER:
 		case NOTE_BLOCK:
-		case REDSTONE_COMPARATOR_OFF:
-		case REDSTONE_COMPARATOR_ON:
-		case SIGN_POST:
+		case COMPARATOR:
+		case SIGN:
 		case SPRUCE_DOOR:
 		case SPRUCE_FENCE_GATE:
 		case STONE_BUTTON:
-		case TRAP_DOOR:
 		case TRAPPED_CHEST:
 		case WALL_SIGN:
-		case WOOD_BUTTON:
-		case WOOD_DOOR:
-		case WOODEN_DOOR:
-		case WORKBENCH:
+		case OAK_BUTTON:
+		case OAK_DOOR:
+		case OAK_TRAPDOOR:
+		case CRAFTING_TABLE:
+		case RED_BED:
+		case ORANGE_BED:
+		case YELLOW_BED:
+		case LIME_BED:
+		case GREEN_BED:
+		case CYAN_BED:
+		case BLUE_BED:
+		case PURPLE_BED:
+		case MAGENTA_BED:
+		case LIGHT_BLUE_BED:
+		case PINK_BED:
+		case BROWN_BED:
+		case WHITE_BED:
+		case GRAY_BED:
+		case LIGHT_GRAY_BED:
+		case BLACK_BED:
 			return true;
 		default:
 			return false;
