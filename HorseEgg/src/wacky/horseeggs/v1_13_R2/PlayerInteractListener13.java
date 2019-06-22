@@ -52,13 +52,9 @@ public class PlayerInteractListener13 implements Listener{
 		PlayerInventory inv = player.getInventory();
 		Entity entity = event.getRightClicked();
 		AbstractHorse horse;
-		if(entity instanceof AbstractHorse){//馬系
-			horse = (AbstractHorse)entity;
-		}else{
-			return;
-		}
 		ItemStack itemInHand = player.getInventory().getItemInMainHand();
-		if(plugin.isHorseEgg(itemInHand)){//offhandの時は先に馬に乗る処理になるはず
+
+		if(plugin.isHorseEgg(itemInHand)){//馬卵を他のエンティティ、馬に使ったとき
 			event.setCancelled(true);//子馬が生まれないように
 			if(event.getHand() == EquipmentSlot.OFF_HAND) return;//オフハンド用の判定は拒否、収納→即放出と増殖がある
 			if(!player.hasPermission("horseeggs.release")) return;
@@ -74,7 +70,7 @@ public class PlayerInteractListener13 implements Listener{
 				inv.setItemInMainHand(itemInHand);
 				if(inv.firstEmpty() == -1 || inv.firstEmpty() >= 36){
 					loc.add(0, 0.5, 0);
-					horse.getWorld().dropItem(loc, plugin.emptyHorseEgg(1));
+					entity.getWorld().dropItem(loc, plugin.emptyHorseEgg(1));
 				}else{
 					player.getInventory().addItem(plugin.emptyHorseEgg(1));
 				}
@@ -85,6 +81,11 @@ public class PlayerInteractListener13 implements Listener{
 		}else if(plugin.isEmptyHorseEgg(itemInHand)){
 			event.setCancelled(true);//馬に卵を使ったことになるんだとか
 			if(event.getHand() == EquipmentSlot.OFF_HAND) return;//オフハンド用の判定は拒否
+			if(entity instanceof AbstractHorse){//馬系
+				horse = (AbstractHorse)entity;
+			}else{
+				return;
+			}
 			if(horse.isAdult() && horse.getPassengers().isEmpty() && horse.getAge() < 5980){
 
 				if(!player.hasPermission("horseeggs.capture")) return;

@@ -72,7 +72,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 	//定義があるのは空だけ
 	public ItemStack emptyHorseEgg(int i){
-		ItemStack egg = new ItemStack(Material.PIG_SPAWN_EGG, i);
+		ItemStack egg = new ItemStack(Material.GHAST_SPAWN_EGG, i);
 		ItemMeta meta = egg.getItemMeta();
 		meta.setDisplayName("HorseEgg");
 		List<String> lore = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	}
 
 	public boolean isEmptyHorseEgg(ItemStack item){//1.13では白い馬卵が無い
-		if(item.getType() == Material.PIG_SPAWN_EGG && item.getItemMeta().hasLore()){
+		if(item.getType() == Material.GHAST_SPAWN_EGG || item.getType() == Material.PIG_SPAWN_EGG && item.getItemMeta().hasLore()){
 			if(item.getItemMeta().getLore().get(0).equals("Empty")) return true;
 		}
 		return false;
