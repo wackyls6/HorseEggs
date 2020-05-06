@@ -5,7 +5,7 @@ public class VersionChecker {
 	String[] versions = {"v1_13_R2", "v1_14_R1", "v1_15_R1"};
 
 	public VersionChecker() {
-		// TODO 自動生成されたコンストラクター・スタブ
+		// TODO 自動生成されたコンストラクター・スタブ.
 	}
 
 	public String check(){

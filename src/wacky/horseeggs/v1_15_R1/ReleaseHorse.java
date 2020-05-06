@@ -37,7 +37,7 @@ public class ReleaseHorse {
 		ItemStack saddle = null;
 		ItemStack armor = null;
 		Boolean chest = false;
-		Variant variant = null;//もはや別Entity
+		Variant variant = null;//もはや別Entity.
 		EntityType type = null;
 		Color color = null;
 		Llama.Color Lcolor = null;
