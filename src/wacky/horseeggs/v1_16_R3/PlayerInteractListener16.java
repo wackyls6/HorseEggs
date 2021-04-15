@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_15_R1.NBTTagCompound;
-import net.minecraft.server.v1_15_R1.NBTTagList;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.NBTTagList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftAbstractHorse;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftAbstractHorse;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ChestedHorse;
@@ -117,7 +117,7 @@ public class PlayerInteractListener16 implements Listener{
 
 
 				NBTTagCompound tag = new NBTTagCompound();
-				net.minecraft.server.v1_15_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
+				net.minecraft.server.v1_16_R3.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 				NBTTagCompound id = new NBTTagCompound();
 				id.setString("id", "minecraft:" + type.toString().toLowerCase());
 				tag.set("EntityTag", id);
@@ -133,11 +133,11 @@ public class PlayerInteractListener16 implements Listener{
 
 				//速度、43倍すると実際の速度に
 				NBTTagCompound tag2 = new NBTTagCompound();
-				((CraftAbstractHorse)horse).getHandle().b(tag2);
+				((CraftAbstractHorse)horse).getHandle().saveData(tag2);
 				NBTTagList attributes = tag2.getList("Attributes", 10);
 				for (int i=0; i<attributes.size(); i++) {
 					NBTTagCompound attr = (NBTTagCompound) attributes.get(i);
-					if (attr.getString("Name").equals("generic.movementSpeed")) {
+					if (attr.getString("Name").equals("minecraft:generic.movement_speed")) {
 						Double speed = attr.getDouble("Base");
 						horseData.setDouble("Speed", speed);
 						if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));

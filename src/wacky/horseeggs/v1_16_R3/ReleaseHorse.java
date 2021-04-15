@@ -12,7 +12,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftAbstractHorse;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.ChestedHorse;
@@ -151,18 +150,21 @@ public class ReleaseHorse {
 		//speedは書き込みもめんｄ
 		NBTTagCompound tag = new NBTTagCompound();
 		EntityHorseAbstract eh =((CraftAbstractHorse)horse).getHandle();
-		eh.loadData(tag);
+		
+		//一旦普通の馬のNBTコピー
+		eh.saveData(tag);
 		NBTTagList attributes = tag.getList("Attributes", 10);
 		for (int j=0; j<attributes.size(); j++) {
 			NBTTagCompound attr = (NBTTagCompound) attributes.get(j);
-			if (attr.getString("Name").equals("generic.movementSpeed")) {
+			if (attr.getString("Name").equals("minecraft:generic.movement_speed")) {
 				attr.setDouble("Base", speed);
-				attributes.a(j, attr);
+				attributes.set(j, attr);
 				break;
 			}
 		}
 		tag.set("Attributes",attributes);
-		eh.saveData(tag);
+		eh.loadData(tag);//速度書き込んでペースト
+		
 		horse.setAge(6000);//繁殖待ち6000tick
 		horse.setCustomName(name);
 		horse.setMaxHealth(MaxHP);
