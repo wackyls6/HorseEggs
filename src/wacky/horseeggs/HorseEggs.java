@@ -18,6 +18,7 @@ import wacky.horseeggs.v1_13_R2.PlayerInteractListener13;
 import wacky.horseeggs.v1_14_R1.PlayerInteractListener14;
 import wacky.horseeggs.v1_15_R1.PlayerInteractListener15;
 import wacky.horseeggs.v1_16_R3.PlayerInteractListener16;
+import wacky.horseeggs.v1_17_R1.PlayerInteractListener17;
 
 
 public class HorseEggs extends JavaPlugin implements Listener{
@@ -59,6 +60,9 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		}
 		else if(version.equals("v1_16_R3")){
 			new PlayerInteractListener16(this);
+		}
+		else if(version.equals("v1_17_R1")){
+			new PlayerInteractListener17(this);
 		}
 		//new ItemDespawnListener(this);.
 	}
