@@ -2,8 +2,12 @@ package wacky.horseeggs.v1_18_R2;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftAbstractHorse;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
@@ -21,6 +25,7 @@ import wacky.horseeggs.HorseEggs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class PlayerInteractListener18 implements Listener{
 
@@ -101,10 +106,10 @@ public class PlayerInteractListener18 implements Listener{
 					return;
 				}
 
-
 				NBTTagCompound tag = new NBTTagCompound();
 				net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 				NBTTagCompound id = new NBTTagCompound();
+
 				id.setString("id", "minecraft:" + type.toString().toLowerCase());
 				tag.set("EntityTag", id);
 				NBTTagCompound horseData = new NBTTagCompound();
@@ -114,11 +119,12 @@ public class PlayerInteractListener18 implements Listener{
 				if(horse.getCustomName() != null) horseData.setString("Name", horse.getCustomName());
 				//体力
 				horseData.setDouble("Health",horse.getHealth());
-				horseData.setDouble("MaxHealth", horse.getMaxHealth());
-				list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getMaxHealth());
+				horseData.setDouble("MaxHealth", horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
 				//速度、43倍すると実際の速度に
-				NBTTagCompound tag2 = new NBTTagCompound();
+				// 1.18で取得方法変更のため、計算方式を変更
+/*				NBTTagCompound tag2 = new NBTTagCompound();
 				((CraftAbstractHorse)horse).getHandle().saveData(tag2);
 				NBTTagList attributes = tag2.getList("Attributes", 10);
 				for (int i=0; i<attributes.size(); i++) {
@@ -130,6 +136,12 @@ public class PlayerInteractListener18 implements Listener{
 						else list.add("Speed: " + Double.toString(speed*43));
 					}
 				}
+*/
+				AbstractHorse abHorse = (AbstractHorse) ((CraftAbstractHorse)horse).getHandle();
+				Double speed = abHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
+				horseData.setDouble("Speed", speed);
+				if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
+				else list.add("Speed: " + Double.toString(speed*43));
 
 				//跳躍力、NBTにのみ書かれるべき
 				Double jump = horse.getJumpStrength();
@@ -147,6 +159,7 @@ public class PlayerInteractListener18 implements Listener{
 
 
 				horseData.setString("Type", horse.getType().toString());
+				// TODO getVariantが非推奨型のため、取得方式を検討する。
 				horseData.setString("Variant", horse.getVariant().toString());
 
 				if(horse.getType() == EntityType.LLAMA){

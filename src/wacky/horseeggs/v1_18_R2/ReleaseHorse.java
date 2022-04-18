@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftAbstractHorse;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.*;
@@ -143,9 +144,10 @@ public class ReleaseHorse {
 		AbstractHorse horse = (AbstractHorse) loc.getWorld().spawnEntity(loc, type);
 
 		//speedは書き込みもめんｄ
-		NBTTagCompound tag = new NBTTagCompound();
+        // 1.18で取得方法変更のため、書き込み方式を変更
+/*		NBTTagCompound tag = new NBTTagCompound();
 		EntityHorseAbstract eh =((CraftAbstractHorse)horse).getHandle();
-		
+
 		//一旦普通の馬のNBTコピー
 		eh.saveData(tag);
 		NBTTagList attributes = tag.getList("Attributes", 10);
@@ -157,9 +159,13 @@ public class ReleaseHorse {
 				break;
 			}
 		}
+
 		tag.set("Attributes",attributes);
 		eh.loadData(tag);//速度書き込んでペースト
-		
+ */
+        AbstractHorse abHorse = (AbstractHorse) ((CraftAbstractHorse)horse).getHandle();
+        Double speed = abHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
+
 		horse.setAge(6000);//繁殖待ち6000tick
 		horse.setCustomName(name);
 		horse.setMaxHealth(MaxHP);
