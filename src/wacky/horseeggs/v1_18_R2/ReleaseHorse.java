@@ -163,8 +163,8 @@ public class ReleaseHorse {
 		tag.set("Attributes",attributes);
 		eh.loadData(tag);//速度書き込んでペースト
  */
-        AbstractHorse abHorse = (AbstractHorse) ((CraftAbstractHorse)horse).getHandle();
-        Double speed = abHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
+		net.minecraft.world.entity.animal.horse.AbstractHorse abHorse = ((CraftAbstractHorse)horse).getHandle();
+        abHorse.setSpeed(NumberConversions.toFloat(speed));
 
 		horse.setAge(6000);//繁殖待ち6000tick
 		horse.setCustomName(name);
