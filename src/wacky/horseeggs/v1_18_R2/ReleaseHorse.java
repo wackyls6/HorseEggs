@@ -1,8 +1,7 @@
 package wacky.horseeggs.v1_18_R2;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
+import net.minecraft.nbt.CompoundTag;
+import org.bukkit.Location;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,7 +41,7 @@ public class ReleaseHorse {
 		int strength = 0;
 
 		net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
-		NBTTagCompound horseData = stack.getTag().getCompound("HorseEgg");
+		CompoundTag horseData = stack.getTag().getCompound("HorseEgg");
 		if(!horseData.isEmpty()){//NBTから読むだけ簡単
 			name = horseData.getString("Name");
 			MaxHP = horseData.getDouble("MaxHealth");

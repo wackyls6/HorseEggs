@@ -22,6 +22,7 @@ import wacky.horseeggs.v1_17_R1.PlayerInteractListener17;
 import wacky.horseeggs.v1_18_R2.PlayerInteractListener18;
 
 
+
 public class HorseEggs extends JavaPlugin implements Listener{
 
 	public FileConfiguration config;
@@ -119,19 +120,31 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	public boolean isClickable(Block block) {//名前変わりすぎ
 		switch(block.getType()){
 		case ANVIL:
+		case ACACIA_SIGN:
+		case ACACIA_WALL_SIGN:
 		case BEACON:
 		case BIRCH_DOOR:
 		case BIRCH_TRAPDOOR:
+		case BIRCH_SIGN:
+		case BIRCH_WALL_SIGN:
 		case BIRCH_FENCE_GATE:
 		case BREWING_STAND:
 		case FURNACE:
 		case CAKE:
+		case CRIMSON_BUTTON :
+		case CRIMSON_DOOR :
+		case CRIMSON_FENCE_GATE :
+		case CRIMSON_SIGN :
+		case CRIMSON_TRAPDOOR :
+		case CRIMSON_WALL_SIGN :
 		case CHEST:
 		case COMMAND_BLOCK:
 		case DARK_OAK_BUTTON:
 		case DARK_OAK_DOOR:
+		case DARK_OAK_SIGN:
 		case DARK_OAK_TRAPDOOR:
 		case DARK_OAK_FENCE_GATE:
+		case DARK_OAK_WALL_SIGN:
 		case DAYLIGHT_DETECTOR:
 		case REPEATER:
 		case DISPENSER:
@@ -143,18 +156,27 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		case IRON_TRAPDOOR:
 		case JUNGLE_DOOR:
 		case JUNGLE_FENCE_GATE:
+		case JUNGLE_SIGN:
+		case JUNGLE_WALL_SIGN:
 		case LEVER:
 		case NOTE_BLOCK:
 		case COMPARATOR:
 		case SIGN:
 		case SPRUCE_DOOR:
 		case SPRUCE_FENCE_GATE:
+		case SPRUCE_SIGN:
+		case SPRUCE_WALL_SIGN:
 		case STONE_BUTTON:
 		case TRAPPED_CHEST:
 		case WALL_SIGN:
+		case WARPED_SIGN:
+		case WARPED_TRAPDOOR:
+		case WARPED_WALL_SIGN:
 		case OAK_BUTTON:
 		case OAK_DOOR:
 		case OAK_TRAPDOOR:
+		case OAK_SIGN:
+		case OAK_WALL_SIGN:
 		case CRAFTING_TABLE:
 		case RED_BED:
 		case ORANGE_BED:

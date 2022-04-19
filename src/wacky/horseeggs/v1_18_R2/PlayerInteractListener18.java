@@ -1,11 +1,6 @@
 package wacky.horseeggs.v1_18_R2;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -216,7 +211,7 @@ public class PlayerInteractListener18 implements Listener{
 				}
 
 				tag.put("HorseEgg",horseData);
-				stack.putTag(tag);
+                stack.setTag(tag);
 				horseegg = CraftItemStack.asBukkitCopy(stack);
 				ItemMeta meta = horseegg.getItemMeta();
 				meta.setDisplayName(horse.getCustomName());
