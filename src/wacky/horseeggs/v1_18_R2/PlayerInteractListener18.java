@@ -133,8 +133,8 @@ public class PlayerInteractListener18 implements Listener{
 					}
 				}
 */
-				AbstractHorse abHorse = (AbstractHorse) ((CraftAbstractHorse)horse).getHandle();
-				Double speed = abHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
+
+				Double speed = ((CraftAbstractHorse)horse).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
 				horseData.putDouble("Speed", speed);
 				if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
 				else list.add("Speed: " + Double.toString(speed*43));

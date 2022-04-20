@@ -14,11 +14,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import wacky.horseeggs.v1_13_R2.PlayerInteractListener13;
-import wacky.horseeggs.v1_14_R1.PlayerInteractListener14;
-import wacky.horseeggs.v1_15_R1.PlayerInteractListener15;
-import wacky.horseeggs.v1_16_R3.PlayerInteractListener16;
-import wacky.horseeggs.v1_17_R1.PlayerInteractListener17;
 import wacky.horseeggs.v1_18_R2.PlayerInteractListener18;
 
 
@@ -51,22 +46,7 @@ public class HorseEggs extends JavaPlugin implements Listener{
 
 		getServer().getPluginManager().registerEvents(this, this);
 
-		if(version.equals("v1_13_R2")){
-			new PlayerInteractListener13(this);
-		}
-		else if(version.equals("v1_14_R1")){
-			new PlayerInteractListener14(this);
-		}
-		else if(version.equals("v1_15_R1")){
-			new PlayerInteractListener15(this);
-		}
-		else if(version.equals("v1_16_R3")){
-			new PlayerInteractListener16(this);
-		}
-		else if(version.equals("v1_17_R1")){
-			new PlayerInteractListener17(this);
-		}
-		else if(version.equals("v1_18_R2")){
+		if(version.equals("v1_18_R2")){
 			new PlayerInteractListener18(this);
 		}
 		//new ItemDespawnListener(this);.
@@ -161,14 +141,12 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		case LEVER:
 		case NOTE_BLOCK:
 		case COMPARATOR:
-		case SIGN:
 		case SPRUCE_DOOR:
 		case SPRUCE_FENCE_GATE:
 		case SPRUCE_SIGN:
 		case SPRUCE_WALL_SIGN:
 		case STONE_BUTTON:
 		case TRAPPED_CHEST:
-		case WALL_SIGN:
 		case WARPED_SIGN:
 		case WARPED_TRAPDOOR:
 		case WARPED_WALL_SIGN:
