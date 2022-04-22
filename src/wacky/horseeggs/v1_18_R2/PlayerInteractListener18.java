@@ -1,6 +1,7 @@
 package wacky.horseeggs.v1_18_R2;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -21,7 +22,6 @@ import wacky.horseeggs.HorseEggs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class PlayerInteractListener18 implements Listener{
 
@@ -102,10 +102,10 @@ public class PlayerInteractListener18 implements Listener{
 					return;
 				}
 
+
 				CompoundTag tag = new CompoundTag();
 				net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
 				CompoundTag id = new CompoundTag();
-
 				id.putString("id", "minecraft:" + type.toString().toLowerCase());
 				tag.put("EntityTag", id);
 				CompoundTag horseData = new CompoundTag();
@@ -119,25 +119,18 @@ public class PlayerInteractListener18 implements Listener{
 				list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
 				//速度、43倍すると実際の速度に
-				// 1.18で取得方法変更のため、計算方式を変更
-/*				NBTTagCompound tag2 = new NBTTagCompound();
-				((CraftAbstractHorse)horse).getHandle().saveData(tag2);
-				NBTTagList attributes = tag2.getList("Attributes", 10);
+                CompoundTag tag2 = new CompoundTag();
+                ((CraftAbstractHorse)horse).getHandle().addAdditionalSaveData(tag2);
+				ListTag attributes = tag2.getList("Attributes", 10);
 				for (int i=0; i<attributes.size(); i++) {
-					NBTTagCompound attr = (NBTTagCompound) attributes.get(i);
+                    CompoundTag attr = (CompoundTag) attributes.get(i);
 					if (attr.getString("Name").equals("minecraft:generic.movement_speed")) {
 						Double speed = attr.getDouble("Base");
-						horseData.setDouble("Speed", speed);
+						horseData.putDouble("Speed", speed);
 						if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
 						else list.add("Speed: " + Double.toString(speed*43));
 					}
 				}
-*/
-
-				Double speed = ((CraftAbstractHorse)horse).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
-				horseData.putDouble("Speed", speed);
-				if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
-				else list.add("Speed: " + Double.toString(speed*43));
 
 				//跳躍力、NBTにのみ書かれるべき
 				Double jump = horse.getJumpStrength();
