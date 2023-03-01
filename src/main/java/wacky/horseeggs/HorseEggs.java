@@ -91,9 +91,14 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	public boolean isClickable(Block block) {//名前変わりすぎ
 		switch(block.getType()){
 		case ANVIL:
+		case ACACIA_BUTTON:
+		case ACACIA_DOOR:
+		case ACACIA_TRAPDOOR:
 		case ACACIA_SIGN:
 		case ACACIA_WALL_SIGN:
+		case ACACIA_FENCE_GATE:
 		case BEACON:
+		case BIRCH_BUTTON:
 		case BIRCH_DOOR:
 		case BIRCH_TRAPDOOR:
 		case BIRCH_SIGN:
@@ -125,28 +130,68 @@ public class HorseEggs extends JavaPlugin implements Listener{
 		case HOPPER:
 		case IRON_DOOR:
 		case IRON_TRAPDOOR:
+		case JUNGLE_BUTTON:
 		case JUNGLE_DOOR:
 		case JUNGLE_FENCE_GATE:
+		case JUNGLE_TRAPDOOR:
 		case JUNGLE_SIGN:
 		case JUNGLE_WALL_SIGN:
 		case LEVER:
 		case NOTE_BLOCK:
 		case COMPARATOR:
+		case SPRUCE_BUTTON:
 		case SPRUCE_DOOR:
 		case SPRUCE_FENCE_GATE:
+		case SPRUCE_TRAPDOOR:
 		case SPRUCE_SIGN:
 		case SPRUCE_WALL_SIGN:
 		case STONE_BUTTON:
 		case TRAPPED_CHEST:
+		case WARPED_BUTTON:
+		case WARPED_DOOR:
 		case WARPED_SIGN:
 		case WARPED_TRAPDOOR:
 		case WARPED_WALL_SIGN:
+		case WARPED_FENCE_GATE:
 		case OAK_BUTTON:
 		case OAK_DOOR:
 		case OAK_TRAPDOOR:
 		case OAK_SIGN:
 		case OAK_WALL_SIGN:
+		case OAK_FENCE_GATE:
+		case MANGROVE_BUTTON:
+		case MANGROVE_DOOR:
+		case MANGROVE_TRAPDOOR:
+		case MANGROVE_SIGN:
+		case MANGROVE_WALL_SIGN:
+		case MANGROVE_FENCE_GATE:
 		case CRAFTING_TABLE:
+		case RESPAWN_ANCHOR:
+		case STONECUTTER:
+		case CARTOGRAPHY_TABLE:
+		case SMITHING_TABLE:
+		case GRINDSTONE:
+		case LOOM:
+		case SMOKER:
+		case BLAST_FURNACE:
+		case BARREL:
+		case SHULKER_BOX:
+		case RED_SHULKER_BOX:
+		case ORANGE_SHULKER_BOX:
+		case YELLOW_SHULKER_BOX:
+		case LIME_SHULKER_BOX:
+		case GREEN_SHULKER_BOX:
+		case CYAN_SHULKER_BOX:
+		case BLUE_SHULKER_BOX:
+		case PURPLE_SHULKER_BOX:
+		case MAGENTA_SHULKER_BOX:
+		case LIGHT_BLUE_SHULKER_BOX:
+		case PINK_SHULKER_BOX:
+		case BROWN_SHULKER_BOX:
+		case WHITE_SHULKER_BOX:
+		case GRAY_SHULKER_BOX:
+		case LIGHT_GRAY_SHULKER_BOX:
+		case BLACK_SHULKER_BOX:
 		case RED_BED:
 		case ORANGE_BED:
 		case YELLOW_BED:

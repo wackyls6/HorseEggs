@@ -304,7 +304,7 @@ public class PlayerInteractListener implements Listener{
 
 	private boolean isSuffocating(Material mat){
 		if(mat.isOccluding()) return true;//窒息する透過ブロック
-		else if(mat == Material.TNT || mat == Material.ICE || mat == Material.GLOWSTONE || mat == Material.REDSTONE_BLOCK || mat == Material.SEA_LANTERN){
+		else if(mat == Material.TNT || mat == Material.ICE || mat == Material.GLOWSTONE || mat == Material.REDSTONE_BLOCK || mat == Material.SEA_LANTERN || mat == Material.SHROOMLIGHT || mat == Material.REDSTONE_LAMP || mat == Material.OCHRE_FROGLIGHT || mat == Material.PEARLESCENT_FROGLIGHT || mat == Material.VERDANT_FROGLIGHT){
 			return true;
 		}
 		return false;
