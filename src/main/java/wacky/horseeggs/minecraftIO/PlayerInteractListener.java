@@ -1,46 +1,33 @@
-package wacky.horseeggs.v1_15_R1;
+package wacky.horseeggs.minecraftIO;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.server.v1_15_R1.NBTTagCompound;
-import net.minecraft.server.v1_15_R1.NBTTagList;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftAbstractHorse;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftAbstractHorse;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.AbstractHorseInventory;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.HorseInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.LlamaInventory;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import wacky.horseeggs.HorseEggs;
 
-public class PlayerInteractListener15 implements Listener{
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class PlayerInteractListener implements Listener{
 
 	private HorseEggs plugin;
 
-	public PlayerInteractListener15(HorseEggs plugin){
+	public PlayerInteractListener(HorseEggs plugin){
     	this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);//a
 	}
@@ -116,30 +103,30 @@ public class PlayerInteractListener15 implements Listener{
 				}
 
 
-				NBTTagCompound tag = new NBTTagCompound();
-				net.minecraft.server.v1_15_R1.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
-				NBTTagCompound id = new NBTTagCompound();
-				id.setString("id", "minecraft:" + type.toString().toLowerCase());
-				tag.set("EntityTag", id);
-				NBTTagCompound horseData = new NBTTagCompound();
+				CompoundTag tag = new CompoundTag();
+				net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(horseegg);
+				CompoundTag id = new CompoundTag();
+				id.putString("id", "minecraft:" + type.toString().toLowerCase());
+				tag.put("EntityTag", id);
+				CompoundTag horseData = new CompoundTag();
 				List<String> list = new ArrayList<String>();
 
 				//名前
-				if(horse.getCustomName() != null) horseData.setString("Name", horse.getCustomName());
+				if(horse.getCustomName() != null) horseData.putString("Name", horse.getCustomName());
 				//体力
-				horseData.setDouble("Health",horse.getHealth());
-				horseData.setDouble("MaxHealth", horse.getMaxHealth());
-				list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getMaxHealth());
+				horseData.putDouble("Health",horse.getHealth());
+				horseData.putDouble("MaxHealth", horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				list.add("HP: " + (int)horse.getHealth() +"/"+ (int)horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
 				//速度、43倍すると実際の速度に
-				NBTTagCompound tag2 = new NBTTagCompound();
-				((CraftAbstractHorse)horse).getHandle().b(tag2);
-				NBTTagList attributes = tag2.getList("Attributes", 10);
+                CompoundTag tag2 = new CompoundTag();
+                ((CraftAbstractHorse)horse).getHandle().addAdditionalSaveData(tag2);
+				ListTag attributes = tag2.getList("Attributes", 10);
 				for (int i=0; i<attributes.size(); i++) {
-					NBTTagCompound attr = (NBTTagCompound) attributes.get(i);
-					if (attr.getString("Name").equals("generic.movementSpeed")) {
+                    CompoundTag attr = (CompoundTag) attributes.get(i);
+					if (attr.getString("Name").equals("minecraft:generic.movement_speed")) {
 						Double speed = attr.getDouble("Base");
-						horseData.setDouble("Speed", speed);
+						horseData.putDouble("Speed", speed);
 						if(Double.toString(speed*43).length() > 6) list.add("Speed: " + Double.toString(speed*43).substring(0, 6));
 						else list.add("Speed: " + Double.toString(speed*43));
 					}
@@ -147,7 +134,7 @@ public class PlayerInteractListener15 implements Listener{
 
 				//跳躍力、NBTにのみ書かれるべき
 				Double jump = horse.getJumpStrength();
-				horseData.setDouble("Jump", jump);
+				horseData.putDouble("Jump", jump);
 
 				double jumpHeight = 0;//from Zyin's HUD、ジャンプ高度
 				while (jump > 0)
@@ -160,19 +147,20 @@ public class PlayerInteractListener15 implements Listener{
 				else list.add("Height: " + Double.toString(jumpHeight));
 
 
-				horseData.setString("Type", horse.getType().toString());
-				horseData.setString("Variant", horse.getVariant().toString());
+				horseData.putString("Type", horse.getType().toString());
+				// TODO getVariantが非推奨型のため、取得方式を検討する。
+				horseData.putString("Variant", horse.getVariant().toString());
 
 				if(horse.getType() == EntityType.LLAMA){
-					horseData.setInt("Strength", ((Llama) horse).getStrength());
+					horseData.putInt("Strength", ((Llama) horse).getStrength());
 					list.add("Strength: " + ((Llama) horse).getStrength());
 
-					horseData.setString("Color", ((Llama) horse).getColor().toString());
+					horseData.putString("Color", ((Llama) horse).getColor().toString());
 					list.add(((Llama) horse).getColor().toString());
 				}
 				else if(horse.getType() == EntityType.HORSE){//馬
-					horseData.setString("Color", ((Horse) horse).getColor().toString());
-					horseData.setString("Style", ((Horse) horse).getStyle().toString());
+					horseData.putString("Color", ((Horse) horse).getColor().toString());
+					horseData.putString("Style", ((Horse) horse).getStyle().toString());
 					list.add(((Horse) horse).getColor().toString() + "/" + ((Horse) horse).getStyle().toString());
 
 				}
@@ -182,29 +170,29 @@ public class PlayerInteractListener15 implements Listener{
 				if(horse.isTamed()){//飼いならした人、UUIDを内部的には使用する。
 					if(horse.getOwner() != null){
 						AnimalTamer owner = horse.getOwner();
-						horseData.setLong("UUIDMost", owner.getUniqueId().getMostSignificantBits());
-						horseData.setLong("UUIDLeast", owner.getUniqueId().getLeastSignificantBits());
+						horseData.putLong("UUIDMost", owner.getUniqueId().getMostSignificantBits());
+						horseData.putLong("UUIDLeast", owner.getUniqueId().getLeastSignificantBits());
 						list.add("Owner: " + owner.getName());
 					}
 
 					AbstractHorseInventory hInv = horse.getInventory();
 					//サドル
-					horseData.setBoolean("Saddle",hInv.getSaddle() != null);
+					horseData.putBoolean("Saddle",hInv.getSaddle() != null);
 					String str1 = hInv.getSaddle() == null ? "" : "[SADDLE]";
 
 					String str2 = "";
 					if(type == EntityType.HORSE && ((HorseInventory) hInv).getArmor() != null){
-						horseData.setString("Armor", ((HorseInventory) hInv).getArmor().getType().toString());
+						horseData.putString("Armor", ((HorseInventory) hInv).getArmor().getType().toString());
 						str2 = "[" + ((HorseInventory) hInv).getArmor().getType().toString() + "]";
 					}else if(type == EntityType.LLAMA && ((LlamaInventory) hInv).getDecor() != null){
-						horseData.setString("Armor", ((LlamaInventory) hInv).getDecor().getType().toString());
+						horseData.putString("Armor", ((LlamaInventory) hInv).getDecor().getType().toString());
 						str2 = "[" + ((LlamaInventory) hInv).getDecor().getType().toString() + "]";
 					}
 					if(entity instanceof ChestedHorse){
-						horseData.setBoolean("Chest", ((ChestedHorse) horse).isCarryingChest());
+						horseData.putBoolean("Chest", ((ChestedHorse) horse).isCarryingChest());
 						if(((ChestedHorse) horse).isCarryingChest()) str2 = str2 + "[CHEST]";//ラマがカーペットとチェスト両持ちできる
 					}else{
-						horseData.setBoolean("Chest", false);
+						horseData.putBoolean("Chest", false);
 					}
 
 					if((str1 + str2).length() > 0) list.add(str1 + str2);
@@ -215,8 +203,8 @@ public class PlayerInteractListener15 implements Listener{
 					}
 				}
 
-				tag.set("HorseEgg",horseData);
-				stack.setTag(tag);
+				tag.put("HorseEgg",horseData);
+                stack.setTag(tag);
 				horseegg = CraftItemStack.asBukkitCopy(stack);
 				ItemMeta meta = horseegg.getItemMeta();
 				meta.setDisplayName(horse.getCustomName());

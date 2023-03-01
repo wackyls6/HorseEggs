@@ -1,28 +1,22 @@
-package wacky.horseeggs.v1_17_R1;
+package wacky.horseeggs.minecraftIO;
 
-import java.util.List;
-import java.util.UUID;
-
-import net.minecraft.world.entity.animal.horse.EntityHorseAbstract;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-
-import org.bukkit.Bukkit;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftAbstractHorse;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftAbstractHorse;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
-import org.bukkit.entity.Llama;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.NumberConversions;
+
+import java.util.List;
+import java.util.UUID;
 
 public class ReleaseHorse {
 
@@ -46,7 +40,7 @@ public class ReleaseHorse {
 		int strength = 0;
 
 		net.minecraft.world.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
-		NBTTagCompound horseData = stack.getTag().getCompound("HorseEgg");
+		CompoundTag horseData = stack.getTag().getCompound("HorseEgg");
 		if(!horseData.isEmpty()){//NBTから読むだけ簡単
 			name = horseData.getString("Name");
 			MaxHP = horseData.getDouble("MaxHealth");
@@ -148,24 +142,24 @@ public class ReleaseHorse {
 		AbstractHorse horse = (AbstractHorse) loc.getWorld().spawnEntity(loc, type);
 
 		//speedは書き込みもめんｄ
-		NBTTagCompound tag = new NBTTagCompound();
-		EntityHorseAbstract eh =((CraftAbstractHorse)horse).getHandle();
-		
+		CompoundTag tag = new CompoundTag();
+		net.minecraft.world.entity.animal.horse.AbstractHorse eh =((CraftAbstractHorse)horse).getHandle();
+
 		//一旦普通の馬のNBTコピー
-		eh.saveData(tag);
-		NBTTagList attributes = tag.getList("Attributes", 10);
+		eh.addAdditionalSaveData(tag);
+		ListTag attributes = tag.getList("Attributes", 10);
 		for (int j=0; j<attributes.size(); j++) {
-			NBTTagCompound attr = (NBTTagCompound) attributes.get(j);
+			CompoundTag attr = (CompoundTag) attributes.get(j);
 			if (attr.getString("Name").equals("minecraft:generic.movement_speed")) {
-				attr.setDouble("Base", speed);
+				attr.putDouble("Base", speed);
 				attributes.set(j, attr);
 				break;
 			}
 		}
-		tag.set("Attributes",attributes);
-		eh.loadData(tag);//速度書き込んでペースト
-		
-		horse.setAge(6000);//繁殖待ち6000tick
+		tag.put("Attributes",attributes);
+		eh.readAdditionalSaveData(tag);//速度書き込んでペースト
+
+ 		horse.setAge(6000);//繁殖待ち6000tick
 		horse.setCustomName(name);
 		horse.setMaxHealth(MaxHP);
 		horse.setHealth(HP);

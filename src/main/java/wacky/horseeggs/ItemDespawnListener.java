@@ -6,7 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-import wacky.horseeggs.v1_13_R2.ReleaseHorse;
+import wacky.horseeggs.minecraftIO.ReleaseHorse;
+
 
 //うまく行ってないので凍結中
 public class ItemDespawnListener implements Listener{
