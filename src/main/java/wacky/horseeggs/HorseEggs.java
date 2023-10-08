@@ -4,7 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.block.*;
+import org.bukkit.block.Barrel;
+import org.bukkit.block.Chest;
+import org.bukkit.block.ChiseledBookshelf;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.block.DaylightDetector;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Jukebox;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.*;
+import org.bukkit.block.data.type.Bed;
+import org.bukkit.block.data.type.Comparator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -89,129 +103,83 @@ public class HorseEggs extends JavaPlugin implements Listener{
 	}
 
 	public boolean isClickable(Block block) {//名前変わりすぎ
-		switch(block.getType()){
-		case ANVIL:
-		case ACACIA_BUTTON:
-		case ACACIA_DOOR:
-		case ACACIA_TRAPDOOR:
-		case ACACIA_SIGN:
-		case ACACIA_WALL_SIGN:
-		case ACACIA_FENCE_GATE:
-		case BEACON:
-		case BIRCH_BUTTON:
-		case BIRCH_DOOR:
-		case BIRCH_TRAPDOOR:
-		case BIRCH_SIGN:
-		case BIRCH_WALL_SIGN:
-		case BIRCH_FENCE_GATE:
-		case BREWING_STAND:
-		case FURNACE:
-		case CAKE:
-		case CRIMSON_BUTTON :
-		case CRIMSON_DOOR :
-		case CRIMSON_FENCE_GATE :
-		case CRIMSON_SIGN :
-		case CRIMSON_TRAPDOOR :
-		case CRIMSON_WALL_SIGN :
-		case CHEST:
-		case COMMAND_BLOCK:
-		case DARK_OAK_BUTTON:
-		case DARK_OAK_DOOR:
-		case DARK_OAK_SIGN:
-		case DARK_OAK_TRAPDOOR:
-		case DARK_OAK_FENCE_GATE:
-		case DARK_OAK_WALL_SIGN:
-		case DAYLIGHT_DETECTOR:
-		case REPEATER:
-		case DISPENSER:
-		case DROPPER:
-		case ENCHANTING_TABLE:
-		case ENDER_CHEST:
-		case HOPPER:
-		case IRON_DOOR:
-		case IRON_TRAPDOOR:
-		case JUNGLE_BUTTON:
-		case JUNGLE_DOOR:
-		case JUNGLE_FENCE_GATE:
-		case JUNGLE_TRAPDOOR:
-		case JUNGLE_SIGN:
-		case JUNGLE_WALL_SIGN:
-		case LEVER:
-		case NOTE_BLOCK:
-		case COMPARATOR:
-		case SPRUCE_BUTTON:
-		case SPRUCE_DOOR:
-		case SPRUCE_FENCE_GATE:
-		case SPRUCE_TRAPDOOR:
-		case SPRUCE_SIGN:
-		case SPRUCE_WALL_SIGN:
-		case STONE_BUTTON:
-		case TRAPPED_CHEST:
-		case WARPED_BUTTON:
-		case WARPED_DOOR:
-		case WARPED_SIGN:
-		case WARPED_TRAPDOOR:
-		case WARPED_WALL_SIGN:
-		case WARPED_FENCE_GATE:
-		case OAK_BUTTON:
-		case OAK_DOOR:
-		case OAK_TRAPDOOR:
-		case OAK_SIGN:
-		case OAK_WALL_SIGN:
-		case OAK_FENCE_GATE:
-		case MANGROVE_BUTTON:
-		case MANGROVE_DOOR:
-		case MANGROVE_TRAPDOOR:
-		case MANGROVE_SIGN:
-		case MANGROVE_WALL_SIGN:
-		case MANGROVE_FENCE_GATE:
-		case CRAFTING_TABLE:
-		case RESPAWN_ANCHOR:
-		case STONECUTTER:
-		case CARTOGRAPHY_TABLE:
-		case SMITHING_TABLE:
-		case GRINDSTONE:
-		case LOOM:
-		case SMOKER:
-		case BLAST_FURNACE:
-		case BARREL:
-		case SHULKER_BOX:
-		case RED_SHULKER_BOX:
-		case ORANGE_SHULKER_BOX:
-		case YELLOW_SHULKER_BOX:
-		case LIME_SHULKER_BOX:
-		case GREEN_SHULKER_BOX:
-		case CYAN_SHULKER_BOX:
-		case BLUE_SHULKER_BOX:
-		case PURPLE_SHULKER_BOX:
-		case MAGENTA_SHULKER_BOX:
-		case LIGHT_BLUE_SHULKER_BOX:
-		case PINK_SHULKER_BOX:
-		case BROWN_SHULKER_BOX:
-		case WHITE_SHULKER_BOX:
-		case GRAY_SHULKER_BOX:
-		case LIGHT_GRAY_SHULKER_BOX:
-		case BLACK_SHULKER_BOX:
-		case RED_BED:
-		case ORANGE_BED:
-		case YELLOW_BED:
-		case LIME_BED:
-		case GREEN_BED:
-		case CYAN_BED:
-		case BLUE_BED:
-		case PURPLE_BED:
-		case MAGENTA_BED:
-		case LIGHT_BLUE_BED:
-		case PINK_BED:
-		case BROWN_BED:
-		case WHITE_BED:
-		case GRAY_BED:
-		case LIGHT_GRAY_BED:
-		case BLACK_BED:
-			return true;
-		default:
+
+		if( block.getType().equals(Material.IRON_DOOR) ||
+				block.getType().equals(Material.IRON_TRAPDOOR)){
+			// 鉄シリーズは問答無用でfalse
 			return false;
+		} else if(block.getState() instanceof Sign){
+			// 看板は編集可・不可の状態が変化するので、動的に取得する
+			// TODO 1.20.1では看板のワックスがけ状態を判別するフィールドがないため、決め打ち。20.2以降に実装を変更する
+//			return ((Sign)block.getState()).isWaxed();
+			return true;
+		} else if(
+			// それ以外
+			// ベルは触った場所が本体以外だとうまく動作しないが、場所を知る手立てがないため入れてない
+			// コンポスターは最大状態以外だとうまく動作しないが、知る手立てがないため入れていない
+			// エンティティ分類であるトロッコ系は現状止める手立てはないが、とりあえず入れてある
+				block.getState() instanceof Container ||
+				block.getState() instanceof EnderChest ||
+				block.getState() instanceof EnchantingTable ||
+				block.getState() instanceof CommandBlock ||
+				block.getState() instanceof DaylightDetector ||
+				block.getState() instanceof Jukebox ||
+				block.getState() instanceof ChiseledBookshelf ||
+				block.getBlockData() instanceof Door ||
+				block.getBlockData() instanceof TrapDoor ||
+				block.getBlockData() instanceof Bed ||
+				block.getBlockData() instanceof Gate ||
+				block.getBlockData() instanceof Cake ||
+				block.getBlockData() instanceof Switch ||
+				block.getBlockData() instanceof Repeater ||
+				block.getBlockData() instanceof Dispenser ||
+				block.getBlockData() instanceof Comparator ||
+				block.getBlockData() instanceof Hopper ||
+				block.getBlockData() instanceof NoteBlock ||
+				block.getBlockData() instanceof Chest ||
+				block.getBlockData() instanceof Grindstone ||
+				block.getBlockData() instanceof Furnace ||
+				block.getBlockData() instanceof Barrel ||
+				block.getBlockData().getMaterial().equals(Material.CRAFTING_TABLE) ||
+				block.getBlockData().getMaterial().equals(Material.ANVIL) ||
+				block.getBlockData().getMaterial().equals(Material.CHIPPED_ANVIL) ||
+				block.getBlockData().getMaterial().equals(Material.DAMAGED_ANVIL) ||
+				block.getBlockData().getMaterial().equals(Material.BEACON) ||
+				block.getBlockData().getMaterial().equals(Material.BREWING_STAND) ||
+				block.getBlockData().getMaterial().equals(Material.FURNACE_MINECART) ||
+				block.getBlockData().getMaterial().equals(Material.HOPPER_MINECART) ||
+				block.getBlockData().getMaterial().equals(Material.CAKE) ||
+				block.getBlockData().getMaterial().equals(Material.CANDLE_CAKE) ||
+				block.getBlockData().getMaterial().equals(Material.CHEST_MINECART) ||
+				block.getBlockData().getMaterial().equals(Material.COMMAND_BLOCK) ||
+				block.getBlockData().getMaterial().equals(Material.DAYLIGHT_DETECTOR) ||
+				block.getBlockData().getMaterial().equals(Material.RESPAWN_ANCHOR) ||
+				block.getBlockData().getMaterial().equals(Material.STONECUTTER) ||
+				block.getBlockData().getMaterial().equals(Material.CARTOGRAPHY_TABLE) ||
+				block.getBlockData().getMaterial().equals(Material.SMITHING_TABLE) ||
+				block.getBlockData().getMaterial().equals(Material.LOOM) ||
+				block.getBlockData().getMaterial().equals(Material.SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.RED_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.ORANGE_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.YELLOW_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.LIME_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.GREEN_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.CYAN_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.BLUE_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.PURPLE_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.MAGENTA_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.LIGHT_BLUE_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.PINK_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.BROWN_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.WHITE_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.GRAY_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.LIGHT_GRAY_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.BLACK_SHULKER_BOX) ||
+				block.getBlockData().getMaterial().equals(Material.ANVIL)
+		) {
+			return true;
 		}
+		return false;
 	}
 
 }
